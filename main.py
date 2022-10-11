@@ -1,14 +1,23 @@
-# our main file.
+#!/usr/bin/env python3
 
-import speech_recognition as sr
+from vosk import Model, KaldiRecognizer
+import os
+import pyaudio
 
-#cria um reconhecedor
-r = sr.Recognizer()
+model = Model("model")
+rec = KaldiRecognizer(model, 16000)
 
-# abrir mic para captura
-with sr.Microphone() as source:
-    while True:
-        audio = r.listen(source) # define microfone como fonte de audio
+p = pyaudio.PyAudio()
+stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+stream.start_stream()
 
-        print(r.recognize_google(audio, language='pt'))
-        
+while True:
+    data = stream.read(4000)
+    if len(data) == 0:
+        break
+    if rec.AcceptWaveForm(data):
+        print(rec.Result())
+    else:
+        print(rec.PartialResult())
+
+print(rec.FinalResult())
