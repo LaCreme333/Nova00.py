@@ -16,7 +16,6 @@ def speak(text):
     engine.say(text)
     engine.runAndWait()
 
-
 model = Model('model')
 rec = KaldiRecognizer(model, 16000)
 
