@@ -1,4 +1,8 @@
 import pyttsx3
 engine = pyttsx3.init()
-engine.say("I will speak this text")
+
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[-2].id)
+
+engine.say("Bom dia Senhor")
 engine.runAndWait()
